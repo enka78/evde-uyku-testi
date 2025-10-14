@@ -18,7 +18,7 @@ export default function HeroSection() {
     const timer = setTimeout(() => {
       setShowControls(false);
     }, 3000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -48,10 +48,10 @@ export default function HeroSection() {
   useEffect(() => {
     const loadYouTubeAPI = () => {
       if (!window.YT) {
-        const script = document.createElement('script');
-        script.src = 'https://www.youtube.com/iframe_api';
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
         document.body.appendChild(script);
-        
+
         window.onYouTubeIframeAPIReady = () => {
           initializePlayer();
         };
@@ -61,45 +61,63 @@ export default function HeroSection() {
     };
 
     const initializePlayer = () => {
-      if (iframeRef.current) {
-        playerRef.current = new YT.Player(iframeRef.current, {
-          events: {
-            'onReady': (event) => {
-              // Try to play after a short delay
-              setTimeout(() => {
-                attemptAutoplay(event.target);
-              }, 500);
+      // Check if YT.Player is available
+      if (typeof YT !== "undefined" && typeof YT.Player !== "undefined") {
+        if (iframeRef.current) {
+          playerRef.current = new YT.Player(iframeRef.current, {
+            events: {
+              onReady: (event) => {
+                // Try to play after a short delay
+                setTimeout(() => {
+                  attemptAutoplay(event.target);
+                }, 500);
+              },
+              onStateChange: (event) => {
+                // Handle video state changes
+                if (event.data === YT.PlayerState.PLAYING) {
+                  setIsPlaying(true);
+                } else if (event.data === YT.PlayerState.PAUSED) {
+                  setIsPlaying(false);
+                } else if (event.data === YT.PlayerState.ENDED) {
+                  // Restart video when it ends (loop)
+                  if (typeof event.target.playVideo === "function") {
+                    event.target.playVideo();
+                  }
+                }
+              },
             },
-            'onStateChange': (event) => {
-              // Handle video state changes
-              if (event.data === YT.PlayerState.PLAYING) {
-                setIsPlaying(true);
-              } else if (event.data === YT.PlayerState.PAUSED) {
-                setIsPlaying(false);
-              } else if (event.data === YT.PlayerState.ENDED) {
-                // Restart video when it ends (loop)
-                event.target.playVideo();
-              }
-            }
-          }
-        });
+          });
+        }
+      } else {
+        console.warn("YouTube API not loaded yet, retrying in 1 second");
+        setTimeout(initializePlayer, 1000);
       }
     };
 
     const attemptAutoplay = (player) => {
       try {
         // First try to play with sound
-        player.playVideo();
-        player.unMute();
-        setIsPlaying(true);
-        setIsMuted(false);
+        if (
+          typeof player.playVideo === "function" &&
+          typeof player.unMute === "function"
+        ) {
+          player.playVideo();
+          player.unMute();
+          setIsPlaying(true);
+          setIsMuted(false);
+        }
       } catch (error) {
         // If that fails, try to play muted
         try {
-          player.mute();
-          player.playVideo();
-          setIsPlaying(true);
-          setIsMuted(true);
+          if (
+            typeof player.mute === "function" &&
+            typeof player.playVideo === "function"
+          ) {
+            player.mute();
+            player.playVideo();
+            setIsPlaying(true);
+            setIsMuted(true);
+          }
         } catch (muteError) {
           // If both fail, we'll need user interaction
           console.log("Autoplay blocked, waiting for user interaction");
@@ -111,7 +129,11 @@ export default function HeroSection() {
 
     // Cleanup
     return () => {
-      if (playerRef.current && playerRef.current.destroy) {
+      // Check if player exists and has destroy method before calling it
+      if (
+        playerRef.current &&
+        typeof playerRef.current.destroy === "function"
+      ) {
         playerRef.current.destroy();
       }
       if (controlsTimeoutRef.current) {
@@ -126,10 +148,16 @@ export default function HeroSection() {
       if (!userInteracted && playerRef.current) {
         setUserInteracted(true);
         try {
-          playerRef.current.playVideo();
-          playerRef.current.unMute();
-          setIsPlaying(true);
-          setIsMuted(false);
+          // Check if the player methods exist before calling them
+          if (
+            typeof playerRef.current.playVideo === "function" &&
+            typeof playerRef.current.unMute === "function"
+          ) {
+            playerRef.current.playVideo();
+            playerRef.current.unMute();
+            setIsPlaying(true);
+            setIsMuted(false);
+          }
         } catch (error) {
           console.log("Failed to start video on user interaction");
         }
@@ -137,42 +165,58 @@ export default function HeroSection() {
     };
 
     // Add event listeners for user interaction
-    document.addEventListener('click', handleUserInteraction);
-    document.addEventListener('touchstart', handleUserInteraction);
-    document.addEventListener('keydown', handleUserInteraction);
+    document.addEventListener("click", handleUserInteraction);
+    document.addEventListener("touchstart", handleUserInteraction);
+    document.addEventListener("keydown", handleUserInteraction);
 
     return () => {
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener("click", handleUserInteraction);
+      document.removeEventListener("touchstart", handleUserInteraction);
+      document.removeEventListener("keydown", handleUserInteraction);
     };
   }, [userInteracted]);
 
   const toggleMute = () => {
     if (playerRef.current) {
-      if (isMuted) {
-        playerRef.current.unMute();
+      // Check if the player methods exist before calling them
+      if (
+        typeof playerRef.current.unMute === "function" &&
+        typeof playerRef.current.mute === "function"
+      ) {
+        if (isMuted) {
+          playerRef.current.unMute();
+        } else {
+          playerRef.current.mute();
+        }
+        setIsMuted(!isMuted);
       } else {
-        playerRef.current.mute();
+        console.warn("YouTube player methods not available yet");
       }
-      setIsMuted(!isMuted);
     }
     handleControlInteraction();
   };
 
   const togglePlay = () => {
     if (playerRef.current) {
-      if (isPlaying) {
-        playerRef.current.pauseVideo();
-      } else {
-        playerRef.current.playVideo();
-        // Ensure we unmute on user-initiated play
-        if (isMuted) {
-          playerRef.current.unMute();
-          setIsMuted(false);
+      // Check if the player methods exist before calling them
+      if (
+        typeof playerRef.current.pauseVideo === "function" &&
+        typeof playerRef.current.playVideo === "function"
+      ) {
+        if (isPlaying) {
+          playerRef.current.pauseVideo();
+        } else {
+          playerRef.current.playVideo();
+          // Ensure we unmute on user-initiated play
+          if (isMuted) {
+            playerRef.current.unMute();
+            setIsMuted(false);
+          }
         }
+        setIsPlaying(!isPlaying);
+      } else {
+        console.warn("YouTube player methods not available yet");
       }
-      setIsPlaying(!isPlaying);
     }
     handleControlInteraction();
   };
@@ -180,58 +224,79 @@ export default function HeroSection() {
   // Add a manual play button for cases where autoplay fails
   const handleManualPlay = () => {
     if (playerRef.current) {
-      playerRef.current.playVideo();
-      playerRef.current.unMute();
-      setIsPlaying(true);
-      setIsMuted(false);
-      setUserInteracted(true);
+      // Check if the player methods exist before calling them
+      if (
+        typeof playerRef.current.playVideo === "function" &&
+        typeof playerRef.current.unMute === "function"
+      ) {
+        playerRef.current.playVideo();
+        playerRef.current.unMute();
+        setIsPlaying(true);
+        setIsMuted(false);
+        setUserInteracted(true);
+      } else {
+        console.warn("YouTube player methods not available yet");
+      }
     }
   };
 
   return (
-    <section className="relative h-screen flex flex-col items-center justify-center bg-gradient-to-br from-primary to-secondary text-foreground overflow-hidden">
+    <section className="relative h-screen flex flex-col items-center justify-center bg-background-light dark:bg-background-dark text-colorSecond-light dark:text-colorSecond-dark overflow-hidden">
       <div className="absolute inset-0 w-full h-full">
-        <iframe 
+        <iframe
           ref={iframeRef}
-          width="560" 
-          height="315" 
+          width="560"
+          height="315"
           src={`https://www.youtube.com/embed/T8r_MJ26pMc?si=fNqoCGgOFALlVyi2&controls=0&autoplay=1&loop=1&playlist=T8r_MJ26pMc&modestbranding=1&showinfo=0&enablejsapi=1&rel=0&iv_load_policy=3&mute=1`}
-          title="YouTube video player" 
-          frameBorder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-          referrerPolicy="strict-origin-when-cross-origin" 
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
           className="w-full h-full object-cover"
         ></iframe>
       </div>
-      
+
       {/* Overlay to reduce video visibility */}
-      <div className="absolute inset-0 bg-black opacity-30"></div>
+      <div className="absolute inset-0 bg-black/40"></div>
 
       {/* Control buttons - centered at top */}
-      <div className={`absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex gap-4 transition-opacity duration-300 ${showControls ? 'opacity-100' : 'opacity-0'}`}
-           onMouseEnter={() => setShowControls(true)}>
-        <button 
+      <div
+        className={`absolute top-4 left-1/2 transform -translate-x-1/2 z-10 flex gap-4 transition-opacity duration-300 ${
+          showControls ? "opacity-100" : "opacity-0"
+        }`}
+        onMouseEnter={() => setShowControls(true)}
+      >
+        <button
           onClick={togglePlay}
-          className="bg-black bg-opacity-50 backdrop-blur-sm rounded-full p-3 hover:bg-opacity-70 transition-all duration-300 flex items-center justify-center cursor-pointer"
+          className="bg-black/30 backdrop-blur-sm rounded-full p-3 hover:bg-black/50 transition-all duration-300 flex items-center justify-center cursor-pointer"
           aria-label={isPlaying ? "Durdur" : "Oynat"}
         >
-          {isPlaying ? <Pause className="text-white w-6 h-6" /> : <Play className="text-white w-6 h-6" />}
+          {isPlaying ? (
+            <Pause className="text-white w-6 h-6" />
+          ) : (
+            <Play className="text-white w-6 h-6" />
+          )}
         </button>
-        
-        <button 
+
+        <button
           onClick={toggleMute}
-          className="bg-black bg-opacity-50 backdrop-blur-sm rounded-full p-3 hover:bg-opacity-70 transition-all duration-300 flex items-center justify-center cursor-pointer"
+          className="bg-black/30 backdrop-blur-sm rounded-full p-3 hover:bg-black/50 transition-all duration-300 flex items-center justify-center cursor-pointer"
           aria-label={isMuted ? "Sesi aç" : "Sesi kapat"}
         >
-          {isMuted ? <VolumeX className="text-white w-6 h-6" /> : <Volume2 className="text-white w-6 h-6" />}
+          {isMuted ? (
+            <VolumeX className="text-white w-6 h-6" />
+          ) : (
+            <Volume2 className="text-white w-6 h-6" />
+          )}
         </button>
       </div>
 
       {/* Show controls on hover anywhere in the hero section except the controls themselves */}
-      <div className="absolute inset-0 z-5" 
-           onMouseMove={handleControlInteraction}>
-      </div>
+      <div
+        className="absolute inset-0 z-5"
+        onMouseMove={handleControlInteraction}
+      ></div>
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
@@ -239,17 +304,23 @@ export default function HeroSection() {
         transition={{ duration: 1 }}
         className="relative z-10 text-center px-4 pt-16 md:pt-0"
       >
-        <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+        <h1 className="!text-white">
           Evde Uyku Testi
         </h1>
-        <p className="text-lg md:text-2xl mb-6 drop-shadow-md">
+        <p className="!text-white">
           Horlama ve uyku apnesi riskinizi evde kolayca ölçün.
         </p>
-        <div className="flex flex-col md:flex-row justify-center gap-4">
-          <Link href="/uyku-apnesi-testi" className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg dark:bg-gray-800 dark:text-white">
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Link
+            href="/uyku-apnesi-testi"
+            className="button flex items-center justify-center"
+          >
             Uyku Testi Yap
           </Link>
-          <Link href="/iletisim" className="bg-transparent border-2 border-white px-6 py-3 rounded-lg hover:bg-white hover:text-primary transition shadow-lg dark:border-gray-300 dark:hover:bg-gray-800 dark:hover:text-white">
+          <Link
+            href="/iletisim"
+            className="button flex items-center justify-center !bg-transparent hover:!bg-white hover:!text-black"
+          >
             İletişime Geç
           </Link>
         </div>

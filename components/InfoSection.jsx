@@ -21,18 +21,20 @@ const infoItems = [
 export default function InfoSection() {
   return (
     <section className="container mx-auto px-4 py-16">
-      <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
+      <h2 className="text-3xl font-bold text-center mb-12 text-colorFirst-light dark:text-colorFirst-dark">
         Uyku Testi Hakkında
       </h2>
       <div className="grid md:grid-cols-3 gap-8">
         {infoItems.map((item, idx) => (
           <div
             key={idx}
-            className="p-6 bg-card-bg rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2 border border-border"
+            className="p-6 bg-background dark:bg-card rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-1 border border-border dark:border-cta-active hover:border-border/70 dark:hover:border-cta-active/70"
           >
-            <CheckCircle className="text-primary mb-4 w-10 h-10" />
-            <h3 className="text-xl font-semibold mb-2 text-card-foreground">{item.title}</h3>
-            <p className="text-foreground">
+            <CheckCircle className="text-accent dark:text-cta-active mb-4 w-10 h-10" />
+            <h3 className="text-xl font-semibold mb-2 text-copy-primary dark:text-copy-secondary">
+              {item.title}
+            </h3>
+            <p className="text-copy-secondary dark:text-copy-primary">
               {item.description}
             </p>
           </div>

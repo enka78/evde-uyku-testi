@@ -1,47 +1,148 @@
 @import "tailwindcss";
 
-/* Light theme variables */
-:root {
-  --background: #ffffff;
-  --foreground: #1f2937;
-  --primary: #3b82f6;
-  --secondary: #6366f1;
-  --card-bg: #f9fafb;
-  --card-foreground: #111827;
-  --border: #e5e7eb;
+/* 🌞 Light Tema */
+.light {
+  color-scheme: light;
+
+  --background: 250, 248, 241; /* #FAF8F1 */
+  --card: 250, 234, 177; /* #FAEAB1 */
+  --accent: 52, 101, 109; /* #34656D */
+  --border: 51, 68, 67; /* #334443 */
+
+  --copy-primary: 23, 23, 23; /* ana metin */
+  --copy-secondary: 115, 115, 115; /* ikincil metin */
+
+  --cta: 52, 101, 109; /* buton rengi */
+  --cta-active: 51, 68, 67; /* hover / aktif */
+  --cta-text: 255, 255, 255; /* buton yazısı */
+  /* WhatsApp brand color */
+  --whatsapp: 37, 211, 102; /* #25D366 */
+  --whatsapp-active: 29, 167, 82; /* darker on hover */
+
+  background-color: rgb(var(--background));
+  color: rgb(var(--copy-primary));
+  border-color: rgb(var(--border));
 }
 
-/* Dark theme variables */
+/* 🌙 Dark Tema */
 .dark {
-  --background: #111827;
-  --foreground: #f9fafb;
-  --primary: #60a5fa;
-  --secondary: #818cf8;
-  --card-bg: #1f2937;
-  --card-foreground: #f9fafb;
-  --border: #374151;
+  color-scheme: dark;
+
+  --background: 27, 60, 83; /* #1B3C53 */
+  --card: 35, 76, 106; /* #234C6A */
+  --accent: 69, 104, 130; /* #456882 */
+  --border: 210, 193, 182; /* #D2C1B6 */
+
+  --copy-primary: 255, 255, 255; /* ana metin */
+  --copy-secondary: 210, 193, 182; /* ikincil metin */
+
+  --cta: 69, 104, 130; /* buton rengi */
+  --cta-active: 35, 76, 106; /* hover / aktif */
+  --cta-text: 255, 255, 255; /* beyaz yazı */
+
+  /* WhatsApp brand color for dark theme (same or slightly adjusted) */
+  --whatsapp: 37, 211, 102; /* #25D366 */
+  --whatsapp-active: 29, 167, 82;
+
+  background-color: rgb(var(--background));
+  color: rgb(var(--copy-primary));
+  border-color: rgb(var(--border));
 }
 
+/* 🌐 Genel stil */
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  background-color: rgb(var(--background));
+  color: rgb(var(--copy-primary));
+  transition: background-color 0.3s, color 0.3s;
 }
 
+/* Başlıklar ve Paragraflar */
+h1 {
+  color: rgb(var(--copy-primary));
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  color: rgb(var(--copy-primary));
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  color: rgb(var(--copy-primary));
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  color: rgb(var(--copy-secondary));
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* Kart */
 .card {
-  background-color: var(--card-bg);
-  color: var(--card-foreground);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: rgb(var(--card));
+  color: rgb(var(--copy-primary));
+  border: 1px solid rgb(var(--border));
+  border-radius: 12px;
+  padding: 1rem;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
 
-/* Ensure form elements adapt to theme */
-input, textarea, select {
-  background-color: var(--card-bg);
-  color: var(--card-foreground);
-  border-color: var(--border);
+/* CTA / Button */
+.button {
+  background-color: rgb(var(--cta));
+  color: rgb(var(--cta-text));
+  border: 1px solid rgb(var(--border));
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: var(--primary);
+.button:hover {
+  background-color: rgb(var(--cta-active));
+}
+
+.button-whatsapp {
+  background-color: rgb(var(--whatsapp));
+  color: white;
+  border: 1px solid white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button-whatsapp:hover {
+  background-color: rgb(var(--whatsapp-active));
+  color: white;
+}
+/* Accent renk (başlıklarda veya vurgu metinleri için) */
+.accent {
+  color: rgb(var(--accent));
+}
+
+.link {
+  color: rgb(var(--copy-primary));
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.link:hover {
+  color:rgb(var(--copy-secondary));
 }

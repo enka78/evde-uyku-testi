@@ -4,7 +4,15 @@ const nextConfig = {
   images: {
     domains: ["your-domain.com"], // Gerekirse değiştir
   },
-  turbopack: true, // Turbopack dev için doğru anahtar
+  // Ensure proper handling of localhost in development
+  async rewrites() {
+    return [
+      {
+        source: "/:path*",
+        destination: "/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
