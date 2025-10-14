@@ -1,6 +1,7 @@
 import { useState } from "react";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
-export default function NarcolepsyTest() {
+export default function NarcolepsyTest({ patientName, setPatientName }) {
   const questions = [
     {
       id: 1,
@@ -35,15 +36,37 @@ export default function NarcolepsyTest() {
   };
 
   const calculateScore = () => {
+    // Check if patient name is provided
+    if (!patientName || !patientName.trim()) {
+      alert("Lütfen adınızı ve soyadınızı girin.");
+      return;
+    }
+
     const total = Object.values(answers).reduce((a, b) => a + b, 0);
     setScore(total);
   };
 
+  // Create WhatsApp message
+  const whatsappMessage = encodeURIComponent(
+    `Narcolepsi Testi Sonuçları:
+
+Hasta Adı: ${patientName || "Belirtilmemiş"}
+
+${questions
+  .map(
+    (q) =>
+      `${q.id}. ${q.text}: ${
+        answers[q.id] !== undefined ? answers[q.id] : "Cevaplanmadı"
+      }`
+  )
+  .join("\n")}\n\nToplam Puan: ${
+      score !== null ? score : "Henüz hesaplanmadı"
+    } / ${questions.length * 3}`
+  );
+
   return (
     <div className="rounded-2xl p-6 shadow-lg bg-card dark:bg-accent transition-colors border border-border dark:border-cta-active">
-      <h3>
-        Ullanlinna Narcolepsy Scale (UNS)
-      </h3>
+      <h3>Ullanlinna Narcolepsy Scale (UNS)</h3>
       <p className="mb-6 text-copy-secondary dark:text-copy-primary">
         Bu test,{" "}
         <strong>Harvard Medical School – Division of Sleep Medicine</strong>
@@ -74,25 +97,6 @@ export default function NarcolepsyTest() {
           </div>
         </div>
       ))}
-
-      <button
-        onClick={calculateScore}
-        className="button w-full mt-6 py-4 rounded-xl  font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 hover:bg-accent/70 dark:hover:bg-cta-active/70"
-      >
-        Sonucu Göster
-      </button>
-
-      {score !== null && (
-        <div className="mt-6 p-5 rounded-xl bg-accent/10 dark:bg-cta-active/10 border border-accent/20 dark:border-cta-active/20 text-copy-primary dark:text-copy-secondary">
-          <p className="text-lg font-semibold">
-            Toplam Puanınız: {score} / {questions.length * 3}
-          </p>
-          <p className="mt-2">
-            Yüksek puanlar, narcolepsi belirtilerinin daha sık yaşandığını
-            gösterebilir. Tanı için mutlaka bir uyku uzmanına başvurun.
-          </p>
-        </div>
-      )}
 
       <p className="text-xs text-[#5A5243] dark:text-[#B6AE9F] opacity-60 mt-8 text-center">
         Kaynak: Harvard Medical School – Division of Sleep Medicine · Ullanlinna

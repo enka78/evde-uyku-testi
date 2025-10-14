@@ -1,10 +1,11 @@
 "use client";
 
 export default function WhatsAppButton({
-  phone = "905XXXXXXXXX",
+  phone = "905323553622",
   text = "WhatsApp üzerinden iletişime geç",
   message = "",
   className = "",
+  name = "",
 }) {
   const url = message
     ? `https://wa.me/${phone}?text=${message}`

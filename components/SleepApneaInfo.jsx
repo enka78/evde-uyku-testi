@@ -72,6 +72,7 @@ export default function SleepApneaInfo() {
           İlgili Tıbbi Birimler
         </h3>
         <ul className="list-disc pl-6 space-y-2 text-copy-secondary dark:text-copy-primary">
+          <li>Göğüs Hastalıkları</li>
           <li>Kulak Burun Boğaz Hastalıkları</li>
           <li>Nöroloji</li>
         </ul>
