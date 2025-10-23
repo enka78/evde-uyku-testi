@@ -3,11 +3,25 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Providers } from "./providers";
 
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
+        {/* Google tag (gtag.js) - Google Ads ID AW-17674804846 */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-17674804846"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);} 
+          gtag('js', new Date());
+          gtag('config', 'AW-17674804846');
+        `,
+          }}
+        />
         <meta property="og:title" content="Evde Uyku Testi" />
         <meta
           property="og:description"
