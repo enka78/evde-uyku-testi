@@ -9,7 +9,7 @@ export default function Footer() {
         <p className="text-lg text-colorFirst-light dark:text-colorFirst-dark">
           © {new Date().getFullYear()} Uyku Bilimleri Merkezi. Tüm hakları
           saklıdır. Uyku Bilimleri Merkezi Bir{" "}
-          <a href="https://www.ubider.org/" target="_blank" className="underline text-black">
+          <a href="https://www.ubider.org/" target="_blank" className="underline text-blue-500">
             UBİDER - Uyku Bilimleri Derneği
           </a>
             Kuruluşudur
