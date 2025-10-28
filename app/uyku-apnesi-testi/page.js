@@ -273,6 +273,10 @@ Toplam Puan: ${
               phone="905323553622"
               message={whatsappMessage}
               text="Sonuçları Uzmanımıza Gönder"
+              conversionId={
+                process.env.NEXT_PUBLIC_AW_CONVERSION ||
+                "AW-17674804846/CONVERSION_LABEL"
+              }
             />
           </div>
         </div>
