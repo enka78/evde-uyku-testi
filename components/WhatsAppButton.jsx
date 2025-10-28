@@ -6,10 +6,25 @@ export default function WhatsAppButton({
   message = "",
   className = "",
   name = "",
+  conversionId = undefined,
 }) {
   const url = message
     ? `https://wa.me/${phone}?text=${message}`
     : `https://wa.me/${phone}`;
+  const handleClick = () => {
+    try {
+      if (
+        conversionId &&
+        typeof window !== "undefined" &&
+        typeof window.gtag === "function"
+      ) {
+        window.gtag("event", "conversion", { send_to: conversionId });
+      }
+    } catch (err) {
+      // ignore
+    }
+    // allow default behavior (opens in new tab)
+  };
 
   return (
     <div className={`text-center ${className}`}>
@@ -17,7 +32,8 @@ export default function WhatsAppButton({
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 button-whatsapp"
+        onClick={handleClick}
+        className={`inline-flex items-center gap-2 button-whatsapp`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
