@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import YouTube from "react-youtube";
+import Image from "next/image";
 
 export default function HeroSection() {
   const [isMuted, setIsMuted] = useState(false);
@@ -95,7 +96,7 @@ export default function HeroSection() {
   }, [player]);
 
   return (
-    <section className="relative w-full flex flex-col items-center justify-center bg-background-light dark:bg-background-dark text-colorSecond-light dark:text-colorSecond-dark overflow-hidden">
+    <section className="relative w-full flex flex-col items-center justify-center bg-background-light dark:bg-background-dark text-colorSecond-light dark:text-colorSecond-dark overflow-hidden h-96">
       {/* Desktop: Content overlay on video, centered vertically and horizontally */}
       <div className="hidden md:flex absolute inset-0 z-10 items-center justify-center text-center px-4">
         <motion.div
@@ -141,7 +142,8 @@ export default function HeroSection() {
           />
         </div>
       ) : (
-        <div className="relative w-full h-96 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+        //<div className="relative w-full h-96 bg-gradient-to-r from-blue-500 to-purple-600"></div>
+        <Image src="/img/uyku-2.webp" alt="evde uyku testi" width={1500} height={500} />
       )}
 
       {/* Overlay to reduce video visibility */}
