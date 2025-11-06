@@ -128,6 +128,7 @@ Toplam Puan: ${
           alt="evde uyku testi"
           width={1520}
           height={1011}
+          loading="lazy"
         />
         <div className="hidden md:flex absolute inset-0 z-10 items-center justify-center text-center px-4">
           <motion.div
