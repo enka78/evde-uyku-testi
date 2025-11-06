@@ -143,7 +143,7 @@ export default function HeroSection() {
         </div>
       ) : (
         //<div className="relative w-full h-96 bg-gradient-to-r from-blue-500 to-purple-600"></div>
-        <Image src="/img/uyku-2.webp" alt="evde uyku testi" width={1500} height={500} />
+        <Image src="/img/uyku-2.webp" alt="evde uyku testi" width={1500} height={500} loading="lazy"/>
       )}
 
       {/* Overlay to reduce video visibility */}
