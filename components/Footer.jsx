@@ -6,10 +6,17 @@ export default function Footer() {
         <p className="mt-2 text-colorSecond-light dark:text-colorSecond-dark opacity-70 text-sm">
           Uyku sağlığınız bizim önceliğimizdir.
         </p>
-        <p className="text-lg text-colorFirst-light dark:text-colorFirst-dark">
+        <p className="mt-2 text-black dark:text-white text-xl!">
+          Zeytinlik Mahallesi Yakut Sokak Üstün Pasajı Kat-3 Bakırköy / İstanbul
+        </p>
+        <p className="text-xs! text-colorFirst-light dark:text-colorFirst-dark mt-2!">
           © {new Date().getFullYear()} Uyku Bilimleri Merkezi. Tüm hakları
           saklıdır. Uyku Bilimleri Merkezi Bir{" "}
-          <a href="https://www.ubider.org/" target="_blank" className="underline text-blue-500">
+          <a
+            href="https://www.ubider.org/"
+            target="_blank"
+            className="underline text-blue-500"
+          >
             UBİDER - Uyku Bilimleri Derneği
           </a>
             Kuruluşudur
