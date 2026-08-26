@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import Image from "next/image";
 
 import ThemeSwitcher from "./ThemeSwitcher";
@@ -16,14 +16,16 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 w-full bg-background dark:bg-card backdrop-blur-sm shadow-md z-50">
+      {/* Üst Ana Header Alanı */}
       <div className="container mx-auto flex justify-between items-center px-5 py-3">
         <Link href="/" onClick={handleMobileNavClick}>
           <div className="flex items-center">
-            <Image src="/logo.png" alt="Site logosu" width={200} height={160} />
+            <Image src="/logo.png" alt="Site logosu" width={200} height={160} priority />
           </div>
         </Link>
 
-        <nav className="hidden md:flex items-center space-x-8">
+        {/* Masaüstü Navigasyon ve Telefon Numarası */}
+        <nav className="hidden md:flex items-center space-x-6">
           <Link href="/" className="link">
             Ana Sayfa
           </Link>
@@ -36,9 +38,20 @@ export default function Header() {
           <Link href="/iletisim" className="link">
             İletişim
           </Link>
+
+          {/* Masaüstü Telefon Butonu */}
+          <a
+            href="tel:+905323553622"
+            className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 text-primary px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors"
+          >
+            <Phone size={16} />
+            <span>0532 355 36 22</span>
+          </a>
+
           <ThemeSwitcher />
         </nav>
 
+        {/* Mobil Sağ Kısım (Tema Değiştirici + Menü Butonu) */}
         <div className="md:hidden flex items-center space-x-2">
           <ThemeSwitcher />
           <button
@@ -51,13 +64,24 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile menu - using different approach to avoid crashes */}
+      {/* MOBİL ALT BANT - Header'ın alt kısmında sürekli görünen telefon alanı */}
+      <div className="md:hidden bg-primary/10 dark:bg-primary/20 border-t border-border/40 py-2 px-5">
+        <a
+          href="tel:+905323553622"
+          className="flex items-center justify-center gap-2 text-primary text-sm font-medium"
+        >
+          <Phone size={15} />
+          <span>Hemen Ara: <strong>0532 355 36 22</strong></span>
+        </a>
+      </div>
+
+      {/* Mobil Açılır Menü */}
       <div
         className={`md:hidden transition-all duration-300 ease-in-out ${
           open ? "block" : "hidden"
         }`}
       >
-        <div className="card flex flex-col gap-4 px-5 py-4">
+        <div className="card flex flex-col gap-2 px-5 py-4 border-t border-gray-200 dark:border-gray-800">
           <Link
             href="/"
             onClick={handleMobileNavClick}
