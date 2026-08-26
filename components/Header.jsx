@@ -15,7 +15,7 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-background dark:bg-card backdrop-blur-md shadow-md z-50">
+    <header className="fixed top-0 left-0 w-full bg-background dark:bg-card backdrop-blur-sm shadow-md z-50">
       <div className="container mx-auto flex justify-between items-center px-5 py-3">
         <Link href="/" onClick={handleMobileNavClick}>
           <div className="flex items-center">
